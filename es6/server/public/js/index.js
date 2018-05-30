@@ -9221,11 +9221,18 @@
 
 	'use strict';
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-	function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
-
 	//一、let、const、块作用域
+	/**
+	 * 共同点：
+	 *      1.自动使用严格模式。不能使用未声明的变量(在浏览器未实现)
+	 *      2.不能重复声明。
+	 *      3.都在块作用域内生效。
+	 *
+	 * const：
+	 *      1.声明的常量，不能修改。
+	 *      2.如果是对象，存储的是对象的内存地址。
+	 *      3.初始化必须赋值。
+	 */
 	function test1() {
 	    /*
 	     * let:
@@ -9247,130 +9254,70 @@
 	}
 
 	//二、解构赋值
+	/**
+	 * 1.数组解构赋值
+	 *      - ...a：表示用a接收更多的参数，以数组返回;
+	 * 2.对象的解构赋值
+	 *      - 要与目标对象的数据解构相同
+	 *      - 重命名的name写在value中,key对应的是目标对象的key
+	 * 3.共性：
+	 *      - 无匹配返回 undefined;
+	 *      - 可以设置默认值；
+	 *      - 优先级：赋值》设置默认值》无匹配默认值(undefined);
+	 */
 	{
-	    /****
-	     *  解构赋值优先级：
-	     *       =右侧有值 >> 默认值  >> undefined(没有匹配到值)
-	    ****/
-
 	    /****
 	     *数组的解构赋值
 	    ****/
 	    {
-	        var a = void 0,
-	            b = void 0,
-	            rest = void 0;
+	        var _ref = [1, 2],
+	            a = _ref[0],
+	            _ref$ = _ref[1],
+	            b = _ref$ === undefined ? 3 : _ref$,
+	            c = _ref[2];
+	        // console.log(a,b,c) //1 2 undefined
 
-	        // console.log(a,b)
-	        a = 1;
-	        b = 2;
-	    }
-
-	    // 默认值\配对失败的默认值
-	    {
-	        var _ref = [1, 2, 4],
-	            _a = _ref[0],
-	            _b = _ref[1],
-	            _ref$ = _ref[2],
-	            c = _ref$ === undefined ? 3 : _ref$,
-	            d = _ref[3];
-	        // console.log(a,b,c,d);
-	    }
-	    // ...的解构
-	    {
-	        var _a2 = void 0,
-	            _b2 = void 0,
-	            _rest = void 0;
-
-	        // console.log(a,b,rest)
-	        _a2 = 1;
-	        _b2 = 2;
-	        _rest = [3, 4, 5, 6];
+	        var aa = 1,
+	            bb = [2, 3, 4, 5];
+	        // console.log(aa, bb)  //1 [2, 3, 4, 5]
 	    }
 	    //使用场景：
-	    {
-	        //* 变量的交换：
-	        var _a3 = 1;
-	        var _b3 = 2;
-
-	        // console.log(a,b);
-	        var _ref2 = [_b3, _a3];
-	        _a3 = _ref2[0];
-	        _b3 = _ref2[1];
-	    }
-	    {
-	        //* 接收函数的返回值：
-	        var f = function f() {
-	            return [1, 2];
-	        };
-
-	        // console.log(a,b);
-	        var ff = function ff() {
-	            return [1, 2, 3, 4, 5];
-	        };
-
-	        var _f = f(),
-	            _f2 = _slicedToArray(_f, 2),
-	            _a4 = _f2[0],
-	            _b4 = _f2[1];
-
-	        var _ff = ff(),
-	            _ff2 = _slicedToArray(_ff, 4),
-	            _c = _ff2[0],
-	            _d = _ff2[3];
-	        // console.log(c,d)
-
-
-	        var _ff3 = ff(),
-	            _ff4 = _toArray(_ff3),
-	            m = _ff4[0],
-	            n = _ff4.slice(1);
-	        // console.log(m,n)
-
-	    }
+	    //数组互换位置；接收函数返回值
 
 	    /****
 	     *对象的解构赋值
 	    ****/
 	    {
 	        var o = {
-	            a: 1,
-	            b: true
-	        },
-	            reset = void 0;
-	        var _a5 = o.a,
-	            _b5 = o.b;
-	        // console.log(a,b,reset)
-	    }
-	    {
-	        var _o = {
-	            title: '1title',
-	            test: [{
-	                title: '2title',
-	                desc: 'description'
-	            }]
+	            title: 1,
+	            list: [{
+	                title: 'aa',
+	                cont: 'bb'
+	            }],
+	            info: 22
 	        };
-
-	        var esTile = _o.title,
-	            _o$test = _slicedToArray(_o.test, 1),
-	            cnTitle = _o$test[0].title,
-	            cont = _o.cont;
-	        // console.log(esTile, cnTitle,cont);
-
 	    }
 	}
 
 	//三、正则扩展
+	/****
+	 * 新增特性：
+	 *      1. 构造函数的变化：
+	 *          可以写入多个修饰符，2参修饰符会覆盖一参修饰符；
+	 *          reg.flags[修饰符查询]
+	 * 
+	 *      2. u修饰符
+	 *        处理大于2字节长度的字符
+	 *          1. ES5中'.'只能匹配小于2个字节长度的字符。
+	 *          2. 正则中，凡是处理大于2个字节长度的字符，都要加u修饰符
+	 * 
+	 *      3. y修饰符
+	 *          更加严格的全局匹配,匹配中间不能间隔其他字符
+	 *          a1.sticky 是否使用y修饰符
+	 *      4. s修饰符(ES8)
+	 *          处理：换行符，回车符，行分隔符，段分隔符。
+	*****/
 	{
-	    /****
-	     * 新增特性：
-	     *      构造函数的变化
-	     *      正则方法的扩展
-	     *      u修饰符
-	     *      y修饰符
-	     *      s修饰符(并没有实现好)
-	    *****/
-
 	    //构造函数的变化：可以使用多个修饰符|修饰符查询
 	    /**
 	     *  1. es5: /xyz/i, /后面只能跟一个修饰符; es6: /后面可以跟多个修饰符，2参会覆盖1参
@@ -9468,16 +9415,16 @@
 	     *  2. '1'.padEnd(2,'0') // 10 向后补0，满足2位数
 	    *****/
 	    {
-	        var _a6 = '𠮷';
+	        var _a = '𠮷';
 	        // console.log(a.length);  //2  计算长度时：每2个字节为1个长度，所以算4个字节，所以长度为2
 	        // console.log(a.charAt(0)) //返回指定位置的字符
 	        // console.log(a.charAt(1))
 	        // console.log(a.charCodeAt(0)) //返回臧丁位置的Unicode码
 	        // console.log(a.charCodeAt(1))
 
-	        var _b6 = '𠮷a';
+	        var _b = '𠮷a';
 	        // console.log(a.length);  //3       
-	        var _c2 = _b6.codePointAt(0);
+	        var _c = _b.codePointAt(0);
 	        // console.log(c); //取4个字节   \𠮷
 	        // console.log(b.codePointAt(1)) //取4个字节后2个字节        \...
 	        // console.log(b.codePointAt(2)) //取5-6，这2个字节          \a
@@ -9526,7 +9473,7 @@
 	        // console.log( 'end', str.endsWith('ing') );  //true 是否是以 ing 结尾
 	        // console.log(str.repeat(2)); // stringstring  将字符串复制2次
 
-	        var _m = 'i am ' + _str;
+	        var m = 'i am ' + _str;
 	    }
 
 	    {
@@ -9577,26 +9524,25 @@
 	}
 
 	//六、数组的扩展
+	/****
+	 * 
+	 *  1. Array.from()  //将伪数组转数组
+	 *  2. Array.of      //将输入的值以数组返回
+	 *  3. copyWithin    //复制数组内的值，在指定地方替换
+	 *  4. find/findIndex //查找满足条件的值，返回值\下标
+	 *  5. fill           //数组填充
+	 *  6. entries/keys/values //遍历 key value key和value
+	 *  7. inludes             //检查是否有这个值，可以检查NaN
+	 * 
+	****/
 	{
-	    /****
-	     * 
-	     *  1. Array.from()
-	     *  2. Array.of
-	     *  3. copyWithin
-	     *  4. find/findIndex
-	     *  5. fill
-	     *  6. entries/keys/values
-	     *  7. inludes
-	     * 
-	    ****/
-
 	    // Array.of(); 将一组数据转化为数组
 	    {
 	        var add = function add() {
 	            return Array.of(arguments);
 	        };
 
-	        var _a7 = Array.of(1, 2, 3, 4, 5);
+	        var _a2 = Array.of(1, 2, 3, 4, 5);
 	        // console.log(a)
 	    }
 
@@ -9618,9 +9564,50 @@
 	    // console.log([1,2,3,4,5,6].fill(0,2,5))
 
 
-	    // entries/keys/values
+	    /*
+	     * entries/keys/values：
+	     *   1. keys --》 拿到数组的下标
+	     *   2. values --> 拿值
+	     *   3. entries --> 下标和值
+	    */
 	    {}
+	    //  for(let index of ['1', 'c', 'ks'].keys()){
+	    //      console.log(index);
+	    //  }
+
+	    //  for(let index of ['1', 'c', 'ks'].values()){
+	    //     console.log(index);
+	    // }
+
+	    // for(let [key, val] of ['1', 'c', 'ks'].entries()){
+	    //     console.log(key, val);
+	    // }
+
+
+	    //替换数组元素
+	    {}
+	    // console.log( [1,2,3,4,5,6,7,8].copyWithin(0,3,5) )  //[4, 5, 3, 4, 5, 6, 7, 8]  替换开始位置：0，从位置3-5(不含) 复制出来覆盖位置0，1
+
+
+	    //查找
+	    {
+	        // console.log([1,2,3,4,5].find(function(item){return item>3}))  //返回值(只找第一个)
+	        // console.log([1,2,3,4,5].findIndex(function(item){return item>3}))  //返回下标(只找第一个)
+
+	        // console.log( [1,2,3,4,NaN].includes(1) );  //true  是否有1
+	        // console.log( [1,2,3,4,NaN].includes(NaN) );  //true 是否有NaN
+	    }
 	}
+
+	//七、函数拓展
+	/******
+	 * 1.参数默认值
+	 * 2.rest参数：...args
+	 * 3.箭头函数
+	 * 4.尾调用： 提升性能
+	*******/
+
+	//八、对象的拓展
 
 /***/ })
 /******/ ]);

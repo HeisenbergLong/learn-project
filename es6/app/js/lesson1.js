@@ -1,4 +1,15 @@
 //一、let、const、块作用域
+/**
+ * 共同点：
+ *      1.自动使用严格模式。不能使用未声明的变量(在浏览器未实现)
+ *      2.不能重复声明。
+ *      3.都在块作用域内生效。
+ *
+ * const：
+ *      1.声明的常量，不能修改。
+ *      2.如果是对象，存储的是对象的内存地址。
+ *      3.初始化必须赋值。
+ */
 function test1(){
     /*
      * let:
@@ -20,92 +31,67 @@ function test1(){
 }
 
 //二、解构赋值
+/**
+ * 1.数组解构赋值
+ *      - ...a：表示用a接收更多的参数，以数组返回;
+ * 2.对象的解构赋值
+ *      - 要与目标对象的数据解构相同
+ *      - 重命名的name写在value中,key对应的是目标对象的key
+ * 3.共性：
+ *      - 无匹配返回 undefined;
+ *      - 可以设置默认值；
+ *      - 优先级：赋值》设置默认值》无匹配默认值(undefined);
+ */
 {
-    /****
-     *  解构赋值优先级：
-     *       =右侧有值 >> 默认值  >> undefined(没有匹配到值)
-    ****/
-        
-
     /****
      *数组的解构赋值
     ****/
     {
-        let a,b,rest;
-        [a,b] = [1,2]
-        // console.log(a,b)
-    }
+        let [a,b=3,c] = [1,2];
+        // console.log(a,b,c) //1 2 undefined
 
-    // 默认值\配对失败的默认值
-    {
-        let [a,b,c=3,d] = [1,2,4];
-        // console.log(a,b,c,d);
-    }
-    // ...的解构
-    {
-        let a,b,rest;
-        [a,b,...rest] = [1,2,3,4,5,6];
-        // console.log(a,b,rest)
+        let [aa,...bb] = [1,2,3,4,5];
+        // console.log(aa, bb)  //1 [2, 3, 4, 5]
     }
     //使用场景：
-    {
-        //* 变量的交换：
-            let a = 1;
-            let b = 2;
-            [a,b] = [b,a];
-            // console.log(a,b);
-    }
-    {
-        //* 接收函数的返回值：
-            function f(){
-                return [1,2];
-            }
-            let [a,b] = f();
-            // console.log(a,b);
-            function ff(){
-                return [1,2,3,4,5];
-            }
-            let [c,,,d] = ff();
-            // console.log(c,d)
-            let [m,...n] = ff();
-            // console.log(m,n)
-    }
+        //数组互换位置；接收函数返回值
 
     /****
      *对象的解构赋值
     ****/
     {
         let o = {
-            a: 1,
-            b: true
-        },reset;
-        let {a, b} = o;
-        // console.log(a,b,reset)
-    }
-    {
-        let o = {
-            title: '1title',
-            test: [{
-                title: '2title',
-                desc: 'description'
-            }]
+            title: 1,
+            list: [
+                {
+                    title: 'aa',
+                    cont: 'bb'
+                }
+            ],
+            info: 22
         }
-        let {title: esTile, test: [{title: cnTitle}],cont} = o;
-        // console.log(esTile, cnTitle,cont);
     }
 }
 
 //三、正则扩展
+/****
+ * 新增特性：
+ *      1. 构造函数的变化：
+ *          可以写入多个修饰符，2参修饰符会覆盖一参修饰符；
+ *          reg.flags[修饰符查询]
+ * 
+ *      2. u修饰符
+ *        处理大于2字节长度的字符
+ *          1. ES5中'.'只能匹配小于2个字节长度的字符。
+ *          2. 正则中，凡是处理大于2个字节长度的字符，都要加u修饰符
+ * 
+ *      3. y修饰符
+ *          更加严格的全局匹配,匹配中间不能间隔其他字符
+ *          a1.sticky 是否使用y修饰符
+ *      4. s修饰符(ES8)
+ *          处理：换行符，回车符，行分隔符，段分隔符。
+*****/
 {
-    /****
-     * 新增特性：
-     *      构造函数的变化
-     *      正则方法的扩展
-     *      u修饰符
-     *      y修饰符
-     *      s修饰符(并没有实现好)
-    *****/
-
     //构造函数的变化：可以使用多个修饰符|修饰符查询
         /**
          *  1. es5: /xyz/i, /后面只能跟一个修饰符; es6: /后面可以跟多个修饰符，2参会覆盖1参
@@ -291,19 +277,18 @@ function test1(){
 }
 
 //六、数组的扩展
-{
     /****
      * 
-     *  1. Array.from()
-     *  2. Array.of
-     *  3. copyWithin
-     *  4. find/findIndex
-     *  5. fill
-     *  6. entries/keys/values
-     *  7. inludes
+     *  1. Array.from()  //将伪数组转数组
+     *  2. Array.of      //将输入的值以数组返回
+     *  3. copyWithin    //复制数组内的值，在指定地方替换
+     *  4. find/findIndex //查找满足条件的值，返回值\下标
+     *  5. fill           //数组填充
+     *  6. entries/keys/values //遍历 key value key和value
+     *  7. inludes             //检查是否有这个值，可以检查NaN
      * 
     ****/
-
+{
     // Array.of(); 将一组数据转化为数组
     {
         function add(){
@@ -330,8 +315,47 @@ function test1(){
         // console.log([1,2,3,4,5,6].fill(0,2,5))
     }
 
-    // entries/keys/values
+    /*
+     * entries/keys/values：
+     *   1. keys --》 拿到数组的下标
+     *   2. values --> 拿值
+     *   3. entries --> 下标和值
+    */
     {
+        //  for(let index of ['1', 'c', 'ks'].keys()){
+        //      console.log(index);
+        //  }
 
+        //  for(let index of ['1', 'c', 'ks'].values()){
+        //     console.log(index);
+        // }
+
+        // for(let [key, val] of ['1', 'c', 'ks'].entries()){
+        //     console.log(key, val);
+        // }
+    }
+
+    //替换数组元素
+    {
+        // console.log( [1,2,3,4,5,6,7,8].copyWithin(0,3,5) )  //[4, 5, 3, 4, 5, 6, 7, 8]  替换开始位置：0，从位置3-5(不含) 复制出来覆盖位置0，1
+    }
+    
+    //查找
+    {
+        // console.log([1,2,3,4,5].find(function(item){return item>3}))  //返回值(只找第一个)
+        // console.log([1,2,3,4,5].findIndex(function(item){return item>3}))  //返回下标(只找第一个)
+
+        // console.log( [1,2,3,4,NaN].includes(1) );  //true  是否有1
+        // console.log( [1,2,3,4,NaN].includes(NaN) );  //true 是否有NaN
     }
 }
+
+//七、函数拓展
+/******
+ * 1.参数默认值
+ * 2.rest参数：...args
+ * 3.箭头函数
+ * 4.尾调用： 提升性能
+*******/
+
+//八、对象的拓展
