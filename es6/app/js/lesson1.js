@@ -18,7 +18,7 @@ function test1(){
      *   3.不能重复声明(同const同)
     **/
     for(let i = 1; i < 3; i++){
-        console.log(i);
+        // console.log(i);
     }
 
     /**
@@ -241,11 +241,11 @@ function test1(){
         }
         // console.log( abc`i am ${user.name},${user.info}` )
         function abc(s, v1, v2){
-            console.log(s,v1,v2)
+            // console.log(s,v1,v2)
             return s + v1 + v2;
         }
 
-        console.log( `Hi\\n${1+2}` )
+        // console.log( `Hi\\n${1+2}` )
     }
 }
 
@@ -265,14 +265,14 @@ function test1(){
      * 7. Math.cbrt('')  //立方根(存在类型转换) 返回值：Q、Infinity、NaN
     *****/
 
-    console.log( Number.isInteger(25) )  //是一个整数？
+    // console.log( Number.isInteger(25) )  //是一个整数？
 
-    console.log( Number.MAX_SAFE_INTEGER )  //最大值
-    console.log( Number.MIN_SAFE_INTEGER )  //最小值
-    console.log( Number.isSafeInteger(1) ) //true  整数是否安全
-    console.log( Math.trunc(3.3) )  //取整 (存在类型转换)
-    console.log( Math.sign(10) )  //判断正负值(存在类型转换)  返回值：-1、0、1、NaN
-    console.log('cbrt', Math.cbrt(''))  //立方根(存在类型转换) 返回值：Q、Infinity、NaN
+    // console.log( Number.MAX_SAFE_INTEGER )  //最大值
+    // console.log( Number.MIN_SAFE_INTEGER )  //最小值
+    // console.log( Number.isSafeInteger(1) ) //true  整数是否安全
+    // console.log( Math.trunc(3.3) )  //取整 (存在类型转换)
+    // console.log( Math.sign(10) )  //判断正负值(存在类型转换)  返回值：-1、0、1、NaN
+    // console.log('cbrt', Math.cbrt(''))  //立方根(存在类型转换) 返回值：Q、Infinity、NaN
     
 }
 
@@ -302,7 +302,7 @@ function test1(){
     {
         function add(){
             Array.from(arguments).forEach(function(item){
-                console.log(item);
+                // console.log(item);
             })
         }
         // add(1,2,3,4,5)
@@ -359,3 +359,202 @@ function test1(){
 *******/
 
 //八、对象的拓展
+/******
+ *  
+ *  1.简写模式: 属性、方法
+ *  2.属性表达式：key值使用变量 [a]
+ * API:
+ *  3. Object.is(a,b)   //判断a===b; 可以判断NaN
+ *  4. Object.assign(o) //浅拷贝
+ *  5.
+ *    5.1 Object.entries(o)  // es7]将对象转2维数组
+ *    5.2 Object.values(o)   // es7]value组成数组
+ *    5.3 Object.keys(o)     // es5]keys组成数组
+ * 6. rest: ...args [babel]不支持
+*******/
+{
+    //1
+    {
+        let a = 1;
+        let es6 = {
+            a,
+            b () {
+                console.log(111)
+            }
+        }
+        // console.log(es6)
+    }
+    //2
+    {
+        let a = 'aa';
+        let es6 = {
+            [a]: 11
+        }
+        // console.log(es6)
+    }
+    //3
+    {
+        /*
+         * 3.1 使用的全等
+         * 3.2 能判断NaN
+         * 
+        */
+        // console.log( Object.is(NaN,NaN) );
+    }
+    //4
+    {
+        /*
+         * 4.1 浅拷贝
+         * 
+        */
+        let o = {
+            c: 1
+        }
+        // console.log( Object.assign({a: 'a'}, {b: o}) ) ;
+    }
+
+    //5
+    {
+        //对象转2维数组
+        let o = {
+            a: 1,
+            b: 2,
+            c: 3
+        }
+
+        // console.log(Object.values(o));
+    }
+
+    //扩展运算符  [ES2018-babel不支持]
+    {
+        // let {a,b, ...c} = {a: '1', b: '2', c: '3', d: '4'};
+        // console.log(a,b,c)
+    }
+}
+
+//九、Symbol：声明独一无二的值
+/* 创建
+ *   1. Symbol.for('aa') //如果Symbol('a')中的a已经存在，则直接使用。
+ * 遍历
+ *   2. Object.getOwnPropertySymbols(obj)  //返回 keys的数组(只有Symbol)
+ *   3. Reflect.ownkeys(obj)               //返回 keys的数组(都存在)
+*/
+
+{
+    let a1 = Symbol.for('aa');
+    let a2 = Symbol.for('aa');
+
+    // console.log(a1 === a2)
+
+    let o = {
+        [a2]: 1,
+        aa: 2
+    }
+
+    for(let i in o){
+        // console.log(i)
+    }
+
+    // console.log( Object.getOwnPropertySymbols(o)[0] )
+
+    // console.log( Reflect.ownKeys(o) )
+}
+
+//十、数据结构
+/*
+ * 1. Set()
+ *   1.1 创建：
+ *          let lise = new Set(arr);
+ * 
+ *       1.1.1 ：
+ *          * 不能重复
+ *          * 属性名就是属性值
+ *          * 可以被 Araay.from(list)转数组
+ *   1.2 属性:
+ *          list.size
+ *   1.3 方法：
+ *          list.add(); 
+ *          list.delete(); 
+ *          list.has(); 
+ *          list.clear()
+ *   1.4 遍历：
+ *          for...of  
+ *          for...of...to[.keys()] 
+ *          for...of...to[.values()]  
+ *          for...of...to[.entries()] 
+ *          forEach
+ * 2. WeakSet()
+ *   2.1  值只能存储 对象
+ *   2.2  弱引用：垃圾回收机制不考虑这段内容
+ *   2.3  不可遍历
+ * 
+ * 3.Map
+ *   3.1 声明
+ *          let map = new Map();
+ *          let map = new Map([['a', 123],['b',456]]);
+ *   3.2 属性：
+ *          map.size
+ *   3.3 方法：
+ *          .set()
+ *          .get()
+ *          .clear()
+ *          .delete()
+ *   3.4 遍历
+ *          for...of  
+ *          for...of...to[.keys()] 
+ *          for...of...to[.values()]  
+ *          for...of...to[.entries()] 
+ *          forEach
+ * 4.WeakMap
+ *   2.1  WeakMap只接受对象作为键名
+ *   2.2  WeakMap的键名所指向的对象，不计入垃圾回收机制
+ *   2.3  不可遍历
+*/
+
+{
+    //Set
+    {
+        let arr = ['add','delete','clar','has','add'];
+        let list = new Set(arr);
+        for(let key of list){
+            // console.log(key)
+        }
+        for(let index of list.keys()){
+            // console.log(index)            
+        }
+        
+        for(let index of list.values()){
+            // console.log(index)            
+        }
+
+        for(let [index, v] of list.entries()){
+            // console.log(index, v)            
+        }
+
+        list.forEach(function(item){
+            // console.log(item)
+        })
+
+        // console.log(Array.from(list))
+    }
+
+    //Map：key不限定数据类型
+    {
+        // let map = new Map(); 
+        const k1 = [1, 2, 3];
+        const k2 = [4, 5, 6];
+        const wm2 = new WeakMap([[k1, 'foo'], [k2, 'bar']]);
+        console.log(wm2.get(k2))
+    }
+}
+
+//十一、对比map-数组 Set-对象
+{
+    //map 数组
+    let map = new Map([['a',1],['b',2]]);
+    console.log(map)
+}
+{
+    //set 数组
+    
+}

@@ -9221,6 +9221,10 @@
 
 	'use strict';
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	//一、let、const、块作用域
 	/**
 	 * 共同点：
@@ -9240,9 +9244,9 @@
 	     *   2.强制使用了严格模式(同const同)
 	     *   3.不能重复声明(同const同)
 	    **/
-	    for (var i = 1; i < 3; i++) {
-	        console.log(i);
-	    }
+	    for (var i = 1; i < 3; i++) {}
+	    // console.log(i);
+
 
 	    /**
 	     * const：
@@ -9483,45 +9487,45 @@
 	    }
 	    {
 	        var abc = function abc(s, v1, v2) {
-	            console.log(s, v1, v2);
+	            // console.log(s,v1,v2)
 	            return s + v1 + v2;
 	        };
+
+	        // console.log( `Hi\\n${1+2}` )
+
 
 	        var user = {
 	            name: 'list',
 	            info: 'hello world'
 	            // console.log( abc`i am ${user.name},${user.info}` )
 	        };
-
-	        console.log('Hi\\n' + (1 + 2));
 	    }
 	}
 
 	//五、数值扩展
-	{
-	    /******
-	     * ES6:
-	     *   二进制：‘0b’开头 (不区分大小写)
-	     *   八进制：'0o'开头 (不区分大小写)
-	     *  
-	     * 1. Number.isInteger() //是一个整数？  只限定数字类型(NaN,Infinity除外)
-	     * 2. Number.MAX_SAFE_INTEGER  //最大值  
-	     * 3. Number.MIN_SAFE_INTEGER  //最小值
-	     * 4. Number.isSafeInteger(1) //true  整数是否安全
-	     * 5. console.log( Math.trunc(3.3) )  //取整 (存在类型转换)
-	     * 6. Math.sign(10)   //判断正负值(存在类型转换)  返回值：-1、0、1、NaN
-	     * 7. Math.cbrt('')  //立方根(存在类型转换) 返回值：Q、Infinity、NaN
-	    *****/
+	{}
+	/******
+	 * ES6:
+	 *   二进制：‘0b’开头 (不区分大小写)
+	 *   八进制：'0o'开头 (不区分大小写)
+	 *  
+	 * 1. Number.isInteger() //是一个整数？  只限定数字类型(NaN,Infinity除外)
+	 * 2. Number.MAX_SAFE_INTEGER  //最大值  
+	 * 3. Number.MIN_SAFE_INTEGER  //最小值
+	 * 4. Number.isSafeInteger(1) //true  整数是否安全
+	 * 5. console.log( Math.trunc(3.3) )  //取整 (存在类型转换)
+	 * 6. Math.sign(10)   //判断正负值(存在类型转换)  返回值：-1、0、1、NaN
+	 * 7. Math.cbrt('')  //立方根(存在类型转换) 返回值：Q、Infinity、NaN
+	*****/
 
-	    console.log(Number.isInteger(25)); //是一个整数？
+	// console.log( Number.isInteger(25) )  //是一个整数？
 
-	    console.log(Number.MAX_SAFE_INTEGER); //最大值
-	    console.log(Number.MIN_SAFE_INTEGER); //最小值
-	    console.log(Number.isSafeInteger(1)); //true  整数是否安全
-	    console.log(Math.trunc(3.3)); //取整 (存在类型转换)
-	    console.log(Math.sign(10)); //判断正负值(存在类型转换)  返回值：-1、0、1、NaN
-	    console.log('cbrt', Math.cbrt('')); //立方根(存在类型转换) 返回值：Q、Infinity、NaN
-	}
+	// console.log( Number.MAX_SAFE_INTEGER )  //最大值
+	// console.log( Number.MIN_SAFE_INTEGER )  //最小值
+	// console.log( Number.isSafeInteger(1) ) //true  整数是否安全
+	// console.log( Math.trunc(3.3) )  //取整 (存在类型转换)
+	// console.log( Math.sign(10) )  //判断正负值(存在类型转换)  返回值：-1、0、1、NaN
+	// console.log('cbrt', Math.cbrt(''))  //立方根(存在类型转换) 返回值：Q、Infinity、NaN
 
 	//六、数组的扩展
 	/****
@@ -9550,7 +9554,7 @@
 	    {
 	        var _add = function _add() {
 	            Array.from(arguments).forEach(function (item) {
-	                console.log(item);
+	                // console.log(item);
 	            });
 	        };
 	        // add(1,2,3,4,5)
@@ -9608,6 +9612,289 @@
 	*******/
 
 	//八、对象的拓展
+	/******
+	 *  
+	 *  1.简写模式: 属性、方法
+	 *  2.属性表达式：key值使用变量 [a]
+	 * API:
+	 *  3. Object.is(a,b)   //判断a===b; 可以判断NaN
+	 *  4. Object.assign(o) //浅拷贝
+	 *  5.
+	 *    5.1 Object.entries(o)  // es7]将对象转2维数组
+	 *    5.2 Object.values(o)   // es7]value组成数组
+	 *    5.3 Object.keys(o)     // es5]keys组成数组
+	 * 6. rest: ...args [babel]不支持
+	*******/
+	{
+	    //1
+	    {
+	        var _a3 = 1;
+	        var es6 = {
+	            a: _a3,
+	            b: function b() {
+	                console.log(111);
+	            }
+	        };
+	        // console.log(es6)
+	    }
+	    //2
+	    {
+	        var _a4 = 'aa';
+	        var _es = _defineProperty({}, _a4, 11);
+	        // console.log(es6)
+	    }
+	    //3
+	    {}
+	    /*
+	     * 3.1 使用的全等
+	     * 3.2 能判断NaN
+	     * 
+	    */
+	    // console.log( Object.is(NaN,NaN) );
+
+	    //4
+	    {
+	        /*
+	         * 4.1 浅拷贝
+	         * 
+	        */
+	        var _o = {
+	            c: 1
+	            // console.log( Object.assign({a: 'a'}, {b: o}) ) ;
+	        };
+	    }
+
+	    //5
+	    {
+	        //对象转2维数组
+	        var _o2 = {
+	            a: 1,
+	            b: 2,
+	            c: 3
+
+	            // console.log(Object.values(o));
+	        };
+	    }
+
+	    //扩展运算符  [ES2018-babel不支持]
+	    {
+	        // let {a,b, ...c} = {a: '1', b: '2', c: '3', d: '4'};
+	        // console.log(a,b,c)
+	    }
+	}
+
+	//九、Symbol：声明独一无二的值
+	/* 创建
+	 *   1. Symbol.for('aa') //如果Symbol('a')中的a已经存在，则直接使用。
+	 * 遍历
+	 *   2. Object.getOwnPropertySymbols(obj)  //返回 keys的数组(只有Symbol)
+	 *   3. Reflect.ownkeys(obj)               //返回 keys的数组(都存在)
+	*/
+
+	{
+	    var _o4;
+
+	    var _a5 = Symbol.for('aa');
+	    var _a6 = Symbol.for('aa');
+
+	    // console.log(a1 === a2)
+
+	    var _o3 = (_o4 = {}, _defineProperty(_o4, _a6, 1), _defineProperty(_o4, 'aa', 2), _o4);
+
+	    for (var _i in _o3) {}
+	    // console.log(i)
+
+
+	    // console.log( Object.getOwnPropertySymbols(o)[0] )
+
+	    // console.log( Reflect.ownKeys(o) )
+	}
+
+	//十、数据结构
+	/*
+	 * 1. Set()
+	 *   1.1 创建：
+	 *          let lise = new Set(arr);
+	 * 
+	 *       1.1.1 ：
+	 *          * 不能重复
+	 *          * 属性名就是属性值
+	 *          * 可以被 Araay.from(list)转数组
+	 *   1.2 属性:
+	 *          list.size
+	 *   1.3 方法：
+	 *          list.add(); 
+	 *          list.delete(); 
+	 *          list.has(); 
+	 *          list.clear()
+	 *   1.4 遍历：
+	 *          for...of  
+	 *          for...of...to[.keys()] 
+	 *          for...of...to[.values()]  
+	 *          for...of...to[.entries()] 
+	 *          forEach
+	 * 2. WeakSet()
+	 *   2.1  值只能存储 对象
+	 *   2.2  弱引用：垃圾回收机制不考虑这段内容
+	 *   2.3  不可遍历
+	 * 
+	 * 3.Map
+	 *   3.1 声明
+	 *          let map = new Map();
+	 *          let map = new Map([['a', 123],['b',456]]);
+	 *   3.2 属性：
+	 *          map.size
+	 *   3.3 方法：
+	 *          .set()
+	 *          .get()
+	 *          .clear()
+	 *          .delete()
+	 *   3.4 遍历
+	 *          for...of  
+	 *          for...of...to[.keys()] 
+	 *          for...of...to[.values()]  
+	 *          for...of...to[.entries()] 
+	 *          forEach
+	 * 4.WeakMap
+	 *   2.1  WeakMap只接受对象作为键名
+	 *   2.2  WeakMap的键名所指向的对象，不计入垃圾回收机制
+	 *   2.3  不可遍历
+	*/
+
+	{
+	    //Set
+	    {
+	        var arr = ['add', 'delete', 'clar', 'has', 'add'];
+	        var list = new Set(arr);
+	        var _iteratorNormalCompletion2 = true;
+	        var _didIteratorError2 = false;
+	        var _iteratorError2 = undefined;
+
+	        try {
+	            for (var _iterator2 = list[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                // console.log(key)
+
+	                var key = _step2.value;
+	            }
+	        } catch (err) {
+	            _didIteratorError2 = true;
+	            _iteratorError2 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                    _iterator2.return();
+	                }
+	            } finally {
+	                if (_didIteratorError2) {
+	                    throw _iteratorError2;
+	                }
+	            }
+	        }
+
+	        var _iteratorNormalCompletion3 = true;
+	        var _didIteratorError3 = false;
+	        var _iteratorError3 = undefined;
+
+	        try {
+	            for (var _iterator3 = list.keys()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                // console.log(index)            
+
+	                var index = _step3.value;
+	            }
+	        } catch (err) {
+	            _didIteratorError3 = true;
+	            _iteratorError3 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                    _iterator3.return();
+	                }
+	            } finally {
+	                if (_didIteratorError3) {
+	                    throw _iteratorError3;
+	                }
+	            }
+	        }
+
+	        var _iteratorNormalCompletion4 = true;
+	        var _didIteratorError4 = false;
+	        var _iteratorError4 = undefined;
+
+	        try {
+	            for (var _iterator4 = list.values()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                // console.log(index)            
+
+	                var _index = _step4.value;
+	            }
+	        } catch (err) {
+	            _didIteratorError4 = true;
+	            _iteratorError4 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                    _iterator4.return();
+	                }
+	            } finally {
+	                if (_didIteratorError4) {
+	                    throw _iteratorError4;
+	                }
+	            }
+	        }
+
+	        var _iteratorNormalCompletion5 = true;
+	        var _didIteratorError5 = false;
+	        var _iteratorError5 = undefined;
+
+	        try {
+	            for (var _iterator5 = list.entries()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                // console.log(index, v)            
+
+	                var _step5$value = _slicedToArray(_step5.value, 2),
+	                    _index2 = _step5$value[0],
+	                    v = _step5$value[1];
+	            }
+	        } catch (err) {
+	            _didIteratorError5 = true;
+	            _iteratorError5 = err;
+	        } finally {
+	            try {
+	                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                    _iterator5.return();
+	                }
+	            } finally {
+	                if (_didIteratorError5) {
+	                    throw _iteratorError5;
+	                }
+	            }
+	        }
+
+	        list.forEach(function (item) {
+	            // console.log(item)
+	        });
+
+	        // console.log(Array.from(list))
+	    }
+
+	    //Map：key不限定数据类型
+	    {
+	        // let map = new Map(); 
+	        var k1 = [1, 2, 3];
+	        var k2 = [4, 5, 6];
+	        var wm2 = new WeakMap([[k1, 'foo'], [k2, 'bar']]);
+	        console.log(wm2.get(k2));
+	    }
+	}
+
+	//十一、对比map-数组 Set-对象
+	{
+	    //map 数组
+	    var map = new Map([['a', 1], ['b', 2]]);
+	    console.log(map);
+	}
+	{
+	    //set 数组
+
+	}
 
 /***/ })
 /******/ ]);
