@@ -454,7 +454,7 @@ function test1(){
     for(let i in o){
         // console.log(i)
     }
-
+   
     // console.log( Object.getOwnPropertySymbols(o)[0] )
 
     // console.log( Reflect.ownKeys(o) )
@@ -558,3 +558,334 @@ function test1(){
     //set 数组
     
 }
+
+//十二、Proxy和Reflect
+/*
+*  Proxy： 代理
+*    1.读取：get()
+*    2.设置：set()
+*    3.检测:     has()
+*    4.删除：    deleteProperty()
+*    5.遍历bject.keys()、Object.getOwnProPertySymbols, Object.getOwnPropertyNames这些方法：
+*  Reflect：反射
+* 
+*/
+{
+    // Proxy
+    let obj = {
+        name: 'obj',
+        time: '2018-6-5',
+        age: 17
+    }
+
+    let proxy = new Proxy(obj, {
+        get (target, key){
+            return target[key];
+        },
+        set (target, key, val){
+            return target[key] = val;
+        },
+        has (target, key){
+            return target[key];
+        },
+        deleteProperty (target, key){
+            if(target[key]){
+                delete target[key];
+                return true;
+            }else{
+                return false;
+            }
+        },
+        ownKeys (target, key){
+            return Object.keys(target).filter(item => item[key]);
+        }
+    })
+}
+{
+    //Reflect
+    let obj = {
+        name: 'obj',
+        age: 12,
+        str: 'string'
+    }
+
+    // console.log( Reflect.get(obj, 'name') )
+    // Reflect.set(obj, 'name', 'obj1');
+    // console.log( Reflect.has(obj, 'name') );
+    // console.log( obj )
+}
+//案例
+{
+    function validator(target, validator){
+        return new Proxy(target, {
+            _validator: validator,
+            set (target, key, value, proxy){
+                if(target.hasOwnProperty(key)){
+                    let va = this._validator[key];
+                    if(!!va(value)){
+                        return Reflect.set(target, key, value, proxy);
+                    }else{
+                        throw Error(`不能设置${key}到${value}`);
+                    }
+                }else{
+                    throw Error(`${key}不存在`)
+                }
+            }
+        })
+    } 
+
+    const personValidator = {
+        name(val){
+            return typeof val === 'string'
+        },
+        age(val){
+            return typeof val === 'number'
+        }
+    }
+
+    class Person {
+        constructor(name, age){
+            this.name = name;
+            this.age = age;
+            return validator(this, personValidator);
+        }
+    }
+
+    // let person = new Person('david', 24);
+    // person.age = 12;
+    // console.log(person);
+}
+
+//十三、类和对象
+/***
+ * 类：
+ *   1.构造函数 constructor
+ *   2.继承  extends
+ *   3.子类修改父类的参数；必须调用super
+ *   4. get| get className(){}  / set | set className(val){} 
+ *   5.静态方法：static tell(){console.log('tell')}  //通过类去调用，而不是类的实例
+ *   6.静态属性：类名.type = '11';
+ * 对象：
+ *  
+***/
+{
+    class Person {
+        constructor (name='person1', age=0) {
+            this.name = name;
+            this.age = age;
+        }
+        getInfo (){
+            return this.name + this.age;
+        }
+        get getName(){
+            return this.type || 'Person';
+        } 
+        set getName(val){
+            this.type = val;
+        }
+        static len () {
+            return 12;
+        }
+    }
+
+    class Child extends Person {
+        constructor (name, age){
+            super(name, age);
+        }
+
+    }
+
+    let person1 = new Person('wenwen', 24);
+    let child1 = new Child('wenwen1', 25);
+}
+
+//十四、Promise：解决异步操作问题异步
+/**
+ *  
+ *  let promise = new Promise((resolve, reject))
+ *  Promise.all([]);  //把多个Promise当成一个Promise；当所有的Promise完成了(不管成功还是失败)，才会执行Promise.then();
+ *  Promise.rece([]); //多个实例中，有一个状态变化，其他的都不在变化。
+**/
+
+
+// 十五、遍历：Iterator自定义接口 | 使用for...of遍历Iterator定于的接口
+/**
+ *   1.Iterator：
+ *      [Symbol.iterator](){}函数; return {next(){}}; reutrn {value: xx,done: false/true}
+ *   2.for...of：
+ *  
+*/
+//实例
+{
+    let obj = {
+        start: [1,2,3],
+        end: [7,8,9],
+        [Symbol.iterator] () {
+            let self = this,
+            index = 0,
+            arr = self.start.concat(self.end),
+            len = arr.length;
+            return {
+                next(){
+                    if(index<len){
+                        return {
+                            value: arr[index++],
+                            done: false
+                        }
+                    }else{
+                        return {
+                            value: arr[index++],
+                            done: true
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for(let i of obj){
+        // console.log(i);
+    }
+}
+
+//十六、Generator：(异步编程的解决方案) || async是Generator的语法糖
+/**
+ *   1.定义
+ *   2.obj[Symbol.iterator] 函数的实现
+ *   3.状态机
+*/
+{
+    let generator = function* (){
+        yield 1;    
+        yield 2;    
+        yield 3;      
+        return 4;
+        
+    }
+    // let _async = async function (){
+    //     await 1;    
+    //     await 2;    
+    //     await 3; 
+    //     return 4;
+    // }
+    // console.log(_async.next());
+    let g = generator();
+    // console.log(g.next());
+
+    let obj = {};
+    obj[Symbol.iterator] = function* (){
+        yield 1;
+        yield 2;
+        yield 3;
+    }
+    for(let i of obj){
+        // console.log( i );
+    }
+
+    let add = function* (){
+        while(1){
+            yield 'a';
+            yield 'b';
+            yield 'c';
+        }
+    }
+
+    let c = add();
+
+    // console.log(c.next())
+    // console.log(c.next())
+    // console.log(c.next())
+    // console.log(c.next())
+    // console.log(c.next())
+}
+//案例
+{
+    //彩票抽奖
+    let draw = function(count){
+        console.log(`剩余${count}`);
+    }
+    let residue = function* (count){
+        while(count > 0){
+            count--;
+            yield draw(count);
+        }
+    }
+    let start = residue(5);
+    let btn = document.createElement("button");
+    btn.innerHTML = '按钮';
+    btn.id = 'start';
+    document.body.appendChild(btn);
+    document.getElementById('start').onclick = function(){
+        start.next();
+    }
+
+    //长轮询
+    let ajax = function*(){
+        yield new Promise(function(resolve, reject){
+            setTimeout(function(){
+                resolve({code: 0})
+            }, 200);
+        })
+    }
+    let pull = function(){
+        let generator = ajax();
+        let step = generator.next();
+        console.log(step)
+        step.value.then(function(d){
+            if(d.code!=0){
+                setTimeout(function(){
+                    console.log('wait...')
+                    pull();
+                },1000);
+            }else{
+                console.log(d);
+            }
+        })
+    }
+    // pull();
+}
+
+//十七、Decorator：(修饰器)，函数、修改行为(拓张类的功能)、修改类的行为(只在累中有用)
+/**
+ *   1.定义
+*/
+{
+    let readonly = function(target, name, descriptor){
+        descriptor.writable = false;
+        return descriptor;
+    }
+
+    class Test{
+        @readonly
+        time(){
+            return '2018';
+        }
+    }
+
+    let test = new Test();
+    // test.time = function(){};//报错
+
+    let typename = function(target, name, descriptor){
+        target.myname = 'hello';
+    }
+
+    @typename
+    class Test1{
+
+    }
+
+    // console.log(Test1.myname); //hello
+}
+
+//十八、模块化
+/**
+ *  1.前提为：export b；export a;export c
+ *      import {a,b,c} from '';  //导入
+ *      import * as all from '';  //导入所有，别名为 all    
+ *  2.前提为：export default {a,b,c}
+ *      import all from '';  //导入
+ * 
+ *  export  //导出
+ *      export b；export a;export c
+ *      export default {a,b,c}  //推荐
+*/

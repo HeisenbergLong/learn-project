@@ -9217,11 +9217,48 @@
 
 /***/ }),
 /* 329 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+	function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
+	    var desc = {};
+	    Object['ke' + 'ys'](descriptor).forEach(function (key) {
+	        desc[key] = descriptor[key];
+	    });
+	    desc.enumerable = !!desc.enumerable;
+	    desc.configurable = !!desc.configurable;
+
+	    if ('value' in desc || desc.initializer) {
+	        desc.writable = true;
+	    }
+
+	    desc = decorators.slice().reverse().reduce(function (desc, decorator) {
+	        return decorator(target, property, desc) || desc;
+	    }, desc);
+
+	    if (context && desc.initializer !== void 0) {
+	        desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
+	        desc.initializer = undefined;
+	    }
+
+	    if (desc.initializer === void 0) {
+	        Object['define' + 'Property'](target, property, desc);
+	        desc = null;
+	    }
+
+	    return desc;
+	}
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -9891,10 +9928,506 @@
 	    var map = new Map([['a', 1], ['b', 2]]);
 	    console.log(map);
 	}
+	{}
+	//set 数组
+
+	//十二、Proxy和Reflect
+	/*
+	*  Proxy： 代理
+	*    1.读取：get()
+	*    2.设置：set()
+	*    3.检测:     has()
+	*    4.删除：    deleteProperty()
+	*    5.遍历bject.keys()、Object.getOwnProPertySymbols, Object.getOwnPropertyNames这些方法：
+	*  Reflect：反射
+	* 
+	*/
 	{
-	    //set 数组
+	    // Proxy
+	    var obj = {
+	        name: 'obj',
+	        time: '2018-6-5',
+	        age: 17
+	    };
+
+	    var proxy = new Proxy(obj, {
+	        get: function get(target, key) {
+	            return target[key];
+	        },
+	        set: function set(target, key, val) {
+	            return target[key] = val;
+	        },
+	        has: function has(target, key) {
+	            return target[key];
+	        },
+	        deleteProperty: function deleteProperty(target, key) {
+	            if (target[key]) {
+	                delete target[key];
+	                return true;
+	            } else {
+	                return false;
+	            }
+	        },
+	        ownKeys: function ownKeys(target, key) {
+	            return Object.keys(target).filter(function (item) {
+	                return item[key];
+	            });
+	        }
+	    });
+	}
+	{
+	    //Reflect
+	    var _obj = {
+	        name: 'obj',
+	        age: 12,
+	        str: 'string'
+
+	        // console.log( Reflect.get(obj, 'name') )
+	        // Reflect.set(obj, 'name', 'obj1');
+	        // console.log( Reflect.has(obj, 'name') );
+	        // console.log( obj )
+	    };
+	}
+	//案例
+	{
+	    var validator = function validator(target, _validator) {
+	        return new Proxy(target, {
+	            _validator: _validator,
+	            set: function set(target, key, value, proxy) {
+	                if (target.hasOwnProperty(key)) {
+	                    var va = this._validator[key];
+	                    if (!!va(value)) {
+	                        return Reflect.set(target, key, value, proxy);
+	                    } else {
+	                        throw Error('\u4E0D\u80FD\u8BBE\u7F6E' + key + '\u5230' + value);
+	                    }
+	                } else {
+	                    throw Error(key + '\u4E0D\u5B58\u5728');
+	                }
+	            }
+	        });
+	    };
+
+	    var personValidator = {
+	        name: function name(val) {
+	            return typeof val === 'string';
+	        },
+	        age: function age(val) {
+	            return typeof val === 'number';
+	        }
+	    };
+
+	    var Person = function Person(name, age) {
+	        _classCallCheck(this, Person);
+
+	        this.name = name;
+	        this.age = age;
+	        return validator(this, personValidator);
+	    };
+
+	    // let person = new Person('david', 24);
+	    // person.age = 12;
+	    // console.log(person);
 
 	}
+
+	//十三、类和对象
+	/***
+	 * 类：
+	 *   1.构造函数 constructor
+	 *   2.继承  extends
+	 *   3.子类修改父类的参数；必须调用super
+	 *   4. get| get className(){}  / set | set className(val){} 
+	 *   5.静态方法：static tell(){console.log('tell')}  //通过类去调用，而不是类的实例
+	 *   6.静态属性：类名.type = '11';
+	 * 对象：
+	 *  
+	***/
+	{
+	    var _Person = function () {
+	        function _Person() {
+	            var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'person1';
+	            var age = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+	            _classCallCheck(this, _Person);
+
+	            this.name = name;
+	            this.age = age;
+	        }
+
+	        _createClass(_Person, [{
+	            key: 'getInfo',
+	            value: function getInfo() {
+	                return this.name + this.age;
+	            }
+	        }, {
+	            key: 'getName',
+	            get: function get() {
+	                return this.type || 'Person';
+	            },
+	            set: function set(val) {
+	                this.type = val;
+	            }
+	        }], [{
+	            key: 'len',
+	            value: function len() {
+	                return 12;
+	            }
+	        }]);
+
+	        return _Person;
+	    }();
+
+	    var Child = function (_Person2) {
+	        _inherits(Child, _Person2);
+
+	        function Child(name, age) {
+	            _classCallCheck(this, Child);
+
+	            return _possibleConstructorReturn(this, (Child.__proto__ || Object.getPrototypeOf(Child)).call(this, name, age));
+	        }
+
+	        return Child;
+	    }(_Person);
+
+	    var person1 = new _Person('wenwen', 24);
+	    var child1 = new Child('wenwen1', 25);
+	}
+
+	//十四、Promise：解决异步操作问题异步
+	/**
+	 *  
+	 *  let promise = new Promise((resolve, reject))
+	 *  Promise.all([]);  //把多个Promise当成一个Promise；当所有的Promise完成了(不管成功还是失败)，才会执行Promise.then();
+	 *  Promise.rece([]); //多个实例中，有一个状态变化，其他的都不在变化。
+	**/
+
+	// 十五、遍历：Iterator自定义接口 | 使用for...of遍历Iterator定于的接口
+	/**
+	 *   1.Iterator：
+	 *      [Symbol.iterator](){}函数; return {next(){}}; reutrn {value: xx,done: false/true}
+	 *   2.for...of：
+	 *  
+	*/
+	//实例
+	{
+	    var _obj2 = _defineProperty({
+	        start: [1, 2, 3],
+	        end: [7, 8, 9]
+	    }, Symbol.iterator, function () {
+	        var self = this,
+	            index = 0,
+	            arr = self.start.concat(self.end),
+	            len = arr.length;
+	        return {
+	            next: function next() {
+	                if (index < len) {
+	                    return {
+	                        value: arr[index++],
+	                        done: false
+	                    };
+	                } else {
+	                    return {
+	                        value: arr[index++],
+	                        done: true
+	                    };
+	                }
+	            }
+	        };
+	    });
+
+	    var _iteratorNormalCompletion6 = true;
+	    var _didIteratorError6 = false;
+	    var _iteratorError6 = undefined;
+
+	    try {
+	        for (var _iterator6 = _obj2[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+	            // console.log(i);
+
+	            var _i2 = _step6.value;
+	        }
+	    } catch (err) {
+	        _didIteratorError6 = true;
+	        _iteratorError6 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+	                _iterator6.return();
+	            }
+	        } finally {
+	            if (_didIteratorError6) {
+	                throw _iteratorError6;
+	            }
+	        }
+	    }
+	}
+
+	//十六、Generator：(异步编程的解决方案) || async是Generator的语法糖
+	/**
+	 *   1.定义
+	 *   2.obj[Symbol.iterator] 函数的实现
+	 *   3.状态机
+	*/
+	{
+	    var generator = /*#__PURE__*/regeneratorRuntime.mark(function generator() {
+	        return regeneratorRuntime.wrap(function generator$(_context) {
+	            while (1) {
+	                switch (_context.prev = _context.next) {
+	                    case 0:
+	                        _context.next = 2;
+	                        return 1;
+
+	                    case 2:
+	                        _context.next = 4;
+	                        return 2;
+
+	                    case 4:
+	                        _context.next = 6;
+	                        return 3;
+
+	                    case 6:
+	                        return _context.abrupt('return', 4);
+
+	                    case 7:
+	                    case 'end':
+	                        return _context.stop();
+	                }
+	            }
+	        }, generator, this);
+	    });
+	    // let _async = async function (){
+	    //     await 1;    
+	    //     await 2;    
+	    //     await 3; 
+	    //     return 4;
+	    // }
+	    // console.log(_async.next());
+	    var g = generator();
+	    // console.log(g.next());
+
+	    var _obj4 = {};
+	    _obj4[Symbol.iterator] = /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+	        return regeneratorRuntime.wrap(function _callee$(_context2) {
+	            while (1) {
+	                switch (_context2.prev = _context2.next) {
+	                    case 0:
+	                        _context2.next = 2;
+	                        return 1;
+
+	                    case 2:
+	                        _context2.next = 4;
+	                        return 2;
+
+	                    case 4:
+	                        _context2.next = 6;
+	                        return 3;
+
+	                    case 6:
+	                    case 'end':
+	                        return _context2.stop();
+	                }
+	            }
+	        }, _callee, this);
+	    });
+	    var _iteratorNormalCompletion7 = true;
+	    var _didIteratorError7 = false;
+	    var _iteratorError7 = undefined;
+
+	    try {
+	        for (var _iterator7 = _obj4[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+	            // console.log( i );
+
+	            var _i3 = _step7.value;
+	        }
+	    } catch (err) {
+	        _didIteratorError7 = true;
+	        _iteratorError7 = err;
+	    } finally {
+	        try {
+	            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+	                _iterator7.return();
+	            }
+	        } finally {
+	            if (_didIteratorError7) {
+	                throw _iteratorError7;
+	            }
+	        }
+	    }
+
+	    var _add2 = /*#__PURE__*/regeneratorRuntime.mark(function _add2() {
+	        return regeneratorRuntime.wrap(function _add2$(_context3) {
+	            while (1) {
+	                switch (_context3.prev = _context3.next) {
+	                    case 0:
+	                        if (false) {
+	                            _context3.next = 9;
+	                            break;
+	                        }
+
+	                        _context3.next = 3;
+	                        return 'a';
+
+	                    case 3:
+	                        _context3.next = 5;
+	                        return 'b';
+
+	                    case 5:
+	                        _context3.next = 7;
+	                        return 'c';
+
+	                    case 7:
+	                        _context3.next = 0;
+	                        break;
+
+	                    case 9:
+	                    case 'end':
+	                        return _context3.stop();
+	                }
+	            }
+	        }, _add2, this);
+	    });
+
+	    var _c2 = _add2();
+
+	    // console.log(c.next())
+	    // console.log(c.next())
+	    // console.log(c.next())
+	    // console.log(c.next())
+	    // console.log(c.next())
+	}
+	//案例
+	{
+	    //彩票抽奖
+	    var draw = function draw(count) {
+	        console.log('\u5269\u4F59' + count);
+	    };
+	    var residue = /*#__PURE__*/regeneratorRuntime.mark(function residue(count) {
+	        return regeneratorRuntime.wrap(function residue$(_context4) {
+	            while (1) {
+	                switch (_context4.prev = _context4.next) {
+	                    case 0:
+	                        if (!(count > 0)) {
+	                            _context4.next = 6;
+	                            break;
+	                        }
+
+	                        count--;
+	                        _context4.next = 4;
+	                        return draw(count);
+
+	                    case 4:
+	                        _context4.next = 0;
+	                        break;
+
+	                    case 6:
+	                    case 'end':
+	                        return _context4.stop();
+	                }
+	            }
+	        }, residue, this);
+	    });
+	    var start = residue(5);
+	    var btn = document.createElement("button");
+	    btn.innerHTML = '按钮';
+	    btn.id = 'start';
+	    document.body.appendChild(btn);
+	    document.getElementById('start').onclick = function () {
+	        start.next();
+	    };
+
+	    //长轮询
+	    var ajax = /*#__PURE__*/regeneratorRuntime.mark(function ajax() {
+	        return regeneratorRuntime.wrap(function ajax$(_context5) {
+	            while (1) {
+	                switch (_context5.prev = _context5.next) {
+	                    case 0:
+	                        _context5.next = 2;
+	                        return new Promise(function (resolve, reject) {
+	                            setTimeout(function () {
+	                                resolve({ code: 0 });
+	                            }, 200);
+	                        });
+
+	                    case 2:
+	                    case 'end':
+	                        return _context5.stop();
+	                }
+	            }
+	        }, ajax, this);
+	    });
+	    var pull = function pull() {
+	        var generator = ajax();
+	        var step = generator.next();
+	        console.log(step);
+	        step.value.then(function (d) {
+	            if (d.code != 0) {
+	                setTimeout(function () {
+	                    console.log('wait...');
+	                    pull();
+	                }, 1000);
+	            } else {
+	                console.log(d);
+	            }
+	        });
+	    };
+	    // pull();
+	}
+
+	//十七、Decorator：(修饰器)，函数、修改行为(拓张类的功能)、修改类的行为(只在累中有用)
+	/**
+	 *   1.定义
+	*/
+	{
+	    var _desc, _value, _class, _class2;
+
+	    var readonly = function readonly(target, name, descriptor) {
+	        descriptor.writable = false;
+	        return descriptor;
+	    };
+
+	    var Test = (_class = function () {
+	        function Test() {
+	            _classCallCheck(this, Test);
+	        }
+
+	        _createClass(Test, [{
+	            key: 'time',
+	            value: function time() {
+	                return '2018';
+	            }
+	        }]);
+
+	        return Test;
+	    }(), (_applyDecoratedDescriptor(_class.prototype, 'time', [readonly], Object.getOwnPropertyDescriptor(_class.prototype, 'time'), _class.prototype)), _class);
+
+
+	    var test = new Test();
+	    // test.time = function(){};//报错
+
+	    var typename = function typename(target, name, descriptor) {
+	        target.myname = 'hello';
+	    };
+
+	    var Test1 = typename(_class2 = function Test1() {
+	        _classCallCheck(this, Test1);
+	    }) || _class2;
+
+	    // console.log(Test1.myname); //hello
+
+	}
+
+	//十八、模块化
+	/**
+	 *  1.前提为：export b；export a;export c
+	 *      import {a,b,c} from '';  //导入
+	 *      import * as all from '';  //导入所有，别名为 all    
+	 *  2.前提为：export default {a,b,c}
+	 *      import all from '';  //导入
+	 * 
+	 *  export  //导出
+	 *      export b；export a;export c
+	 *      export default {a,b,c}  //推荐
+	*/
 
 /***/ })
 /******/ ]);
