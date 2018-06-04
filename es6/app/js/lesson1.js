@@ -614,11 +614,120 @@ function test1(){
 
 //十二、 Proxy、Reflect
 /***
- *  Proxy：代理
- *      读取|设置|检查|删除
- *  Reflect：反射
- *  
+ *  Proxy：代理：new Proxy(target, {
+ *          get (){},
+ *          set (){}
+ *      })
+ *      1.读取设置: .[name]/赋值
+ *      2.检查: has()
+ *      3.删除: deleteProprety()
+ *      4.遍历：遍历Object.okeys()\Object.getOwnPropertySymbol\Object.getOwnPropertyNames：ownKeys()
+ *  Reflect：反射：不需要new，直接使用
+ *      1.获取/设置  get(_obj,_name)/set()
+ *      2.检查：has()
+ *      3.删除: deleteProprety()
  * */
 {
+    let obj = {
+        name: 'obj',
+        time: '2017-03-11',
+        _r: 123
+    }
 
+    let monitor = new Proxy(obj, {
+        get(target, key){
+            if(key !== '_r'){
+                return target[key];
+            }
+        }, 
+        set (target, key, val){
+            if(key !== '_r'){
+                return target[key] = val;
+            }else{
+                return target[key];
+            }
+        },
+        has (target, key){
+            if(key !== '_r'){
+                return target[key]                
+            }else{
+                return false;
+            }
+        },
+        deleteProperty (target, key){
+            if(key !== '_r'){
+                delete target[key];
+                return true;
+            }else{
+                return target[key];
+            }
+        },
+        //遍历Object.okeys()\Object.getOwnPropertySymbol\Object.getOwnPropertyNames
+        ownKeys (target){
+            return Object.keys(target).filter(item=>item!=='_r');
+        }
+    })
+
+    // console.log( monitor.name )
+    // console.log( monitor.time )
+    // console.log( monitor._r )
+
+    // console.log('_r' in monitor)
+
+    // delete monitor._r;
+    // console.log( Object.getOwnPropertyNames(monitor) )
+}
+{
+    let obj = {
+        name: 'obj',
+        time: '2017-03-11',
+        _r: 123
+    }
+
+    // console.log( Reflect.get(obj, 'time') );
+    // console.log( Reflect.set(obj, 'time', '11') );
+    // console.log( Reflect.deleteProperty(obj, 'time') );
+    // console.log( Reflect.has(obj, 'time') );
+    // console.log(obj);
+}
+//案例
+{
+    function validator(target, validator){
+        return new Proxy(target, {
+            _validator: validator,
+            set (target, key, value, proxy){
+                if(target.hasOwnProperty(key)){
+                    let va = this._validator[key];
+                    if(!!va(value)){
+                        return Reflect.set(target, key, value, proxy);
+                    }else{
+                        throw Error(`不能设置${key}到${value}`);
+                    }
+                }else{
+                    throw Error(`${key}不存在`);
+                }
+            }
+        })
+    }
+
+    const personValidators = {
+        name(val){
+            return typeof val === 'string';
+        },
+        age(val){
+            return typeof val === 'number' && val > 18;
+        }
+    }
+
+    class Person{
+        constructor (name, age){
+            this.name = name;
+            this.age = age;
+            return validator(this,personValidators);
+        }
+    }
+
+    const person = new Person('david', 24);
+    person.age = 19;
+    console.info(person);
 }

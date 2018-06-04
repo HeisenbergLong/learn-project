@@ -9223,6 +9223,8 @@
 
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	//一、let、const、块作用域
@@ -9961,12 +9963,126 @@
 
 	//十二、 Proxy、Reflect
 	/***
-	 *  Proxy：代理
-	 *      读取|设置|检查| 删除
-	 *  Reflect：反射
-	 *  
+	 *  Proxy：代理：new Proxy(target, {
+	 *          get (){},
+	 *          set (){}
+	 *      })
+	 *      1.读取设置: .[name]/赋值
+	 *      2.检查: has()
+	 *      3.删除: deleteProprety()
+	 *      4.遍历：遍历Object.okeys()\Object.getOwnPropertySymbol\Object.getOwnPropertyNames：ownKeys()
+	 *  Reflect：反射：不需要new，直接使用
+	 *      1.获取/设置  get(_obj,_name)/set()
+	 *      2.检查：has()
+	 *      3.删除: deleteProprety()
 	 * */
-	{}
+	{
+	    var _obj = {
+	        name: 'obj',
+	        time: '2017-03-11',
+	        _r: 123
+	    };
+
+	    var monitor = new Proxy(_obj, {
+	        get: function get(target, key) {
+	            if (key !== '_r') {
+	                return target[key];
+	            }
+	        },
+	        set: function set(target, key, val) {
+	            if (key !== '_r') {
+	                return target[key] = val;
+	            } else {
+	                return target[key];
+	            }
+	        },
+	        has: function has(target, key) {
+	            if (key !== '_r') {
+	                return target[key];
+	            } else {
+	                return false;
+	            }
+	        },
+	        deleteProperty: function deleteProperty(target, key) {
+	            if (key !== '_r') {
+	                delete target[key];
+	                return true;
+	            } else {
+	                return target[key];
+	            }
+	        },
+
+	        //遍历Object.okeys()\Object.getOwnPropertySymbol\Object.getOwnPropertyNames
+	        ownKeys: function ownKeys(target) {
+	            return Object.keys(target).filter(function (item) {
+	                return item !== '_r';
+	            });
+	        }
+	    });
+
+	    // console.log( monitor.name )
+	    // console.log( monitor.time )
+	    // console.log( monitor._r )
+
+	    // console.log('_r' in monitor)
+
+	    // delete monitor._r;
+	    // console.log( Object.getOwnPropertyNames(monitor) )
+	}
+	{
+	    var _obj2 = {
+	        name: 'obj',
+	        time: '2017-03-11',
+	        _r: 123
+
+	        // console.log( Reflect.get(obj, 'time') );
+	        // console.log( Reflect.set(obj, 'time', '11') );
+	        // console.log( Reflect.deleteProperty(obj, 'time') );
+	        // console.log( Reflect.has(obj, 'time') );
+	        // console.log(obj);
+	    };
+	}
+	//案例
+	{
+	    var validator = function validator(target, _validator) {
+	        return new Proxy(target, {
+	            _validator: _validator,
+	            set: function set(target, key, value, proxy) {
+	                if (target.hasOwnProperty(key)) {
+	                    var va = this._validator[key];
+	                    if (!!va(value)) {
+	                        return Reflect.set(target, key, value, proxy);
+	                    } else {
+	                        throw Error('\u4E0D\u80FD\u8BBE\u7F6E' + key + '\u5230' + value);
+	                    }
+	                } else {
+	                    throw Error(key + '\u4E0D\u5B58\u5728');
+	                }
+	            }
+	        });
+	    };
+
+	    var personValidators = {
+	        name: function name(val) {
+	            return typeof val === 'string';
+	        },
+	        age: function age(val) {
+	            return typeof val === 'number' && val > 18;
+	        }
+	    };
+
+	    var Person = function Person(name, age) {
+	        _classCallCheck(this, Person);
+
+	        this.name = name;
+	        this.age = age;
+	        return validator(this, personValidators);
+	    };
+
+	    var person = new Person('david', 24);
+	    person.age = 19;
+	    console.info(person);
+	}
 
 /***/ })
 /******/ ]);
