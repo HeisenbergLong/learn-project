@@ -548,13 +548,77 @@ function test1(){
     }
 }
 
-//十一、对比map-数组 Set-对象
+//十一、对比map-数组 Set-对象：增|查|改|删
+/*
+ * 优先 Map
+ * 要求有唯一性 Set
+**/
+
+//map set 数组：增|查|改|删
 {
-    //map 数组
-    let map = new Map([['a',1],['b',2]]);
-    console.log(map)
+    let set = new Set();
+    let map = new Map();
+    let arr = [];
+    //增
+    map.set('a', 1);
+    arr.push({a: 1});
+    set.add({a: 1});
+
+    //查
+    let m = map.has('a');
+    let s = set.has({a: 1});
+    let a = arr.find((i)=> i.a?i:'');
+
+    //改
+    m = map.set("a", 2);
+    a = arr.forEach((i) => i.a?i.a=2:'');
+    s = set.forEach((i)=> i.a?i.a=2:'');
+
+    //删
+    map.delete('a');
+    set.forEach((i)=>i.a?set.delete(i):'');
+    let index = arr.findIndex((i)=>i.a);
+    arr.splice(index,1);
 }
+//map set Object：增|查|改|删
 {
-    //set 数组
-    
+    let item = {
+        a: 1
+    }
+    let map = new Map();
+    let set = new Set();
+    let obj = {};
+
+    //增
+    map.set('t', 1);
+    set.add(item);
+    obj['t'] = 1;
+
+    //查
+    let m = map.has('t');
+    let s = set.has(item);
+    let o = 't' in obj;
+    // console.log(m, s, o);
+
+    //改
+    map.set('t', 2);
+    item.a = 2;
+    obj.t = 2;
+
+    //删
+    map.delete('t');
+    set.delete(item);
+    delete obj['t'];
+    console.log(map, set, obj);
+}
+
+//十二、 Proxy、Reflect
+/***
+ *  Proxy：代理
+ *      读取|设置|检查|删除
+ *  Reflect：反射
+ *  
+ * */
+{
+
 }
