@@ -1,79 +1,79 @@
 import $ from 'jquery';
+import { rejects } from 'assert';
 
-class Interface{
+export default class Interface {
     /**
-     * [getOmit: 获取遗漏数据]
-     * @param {string} issue [当前期号]
-     * @return {[type]}      [description]
-    */
-    getOmit(issue){
+     * 获取‘遗漏’接口
+     * @param   {string} issue    [期数]
+     * @return  {promise} 
+     */
+    getOmit (issue) {
         let self = this;
+
         return new Promise((resolve, reject)=>{
             $.ajax({
                 url: '/get/omit',
+                type: 'get',
                 data: {
                     issue: issue
                 },
                 dataType: 'json',
                 success: function(res){
                     self.setOmit(res.data);
-                    resolve.call(self, res)
+                    resolve.call(self, res);
                 },
                 error: function(err){
-                    reject.call(err)
+                    reject.call(err);
                 }
             })
-        })
+        });
     }
 
     /**
-     * [getOpenCode: 获取开奖数据]
-     * @param {string} issue [当前期号]
-     * @return {[type]}      [description]
-    */
-    getOpenCode(issue){
+     * 获取开奖号码
+     * @param   {string} issue [期号]
+     * @return  {promise}
+     */
+    getOpenCode (issue) {
         let self = this;
-        return new Promise((resolve, reject)=> {
+
+        return new Promise((resolve, reject) => {
             $.ajax({
                 url: '/get/opencode',
+                type: 'get',
                 data: {
                     issue: issue
                 },
                 dataType: 'json',
                 success: function(res){
                     self.setOpenCode(res.data);
-                    resolve.call(self, res)
+                    resolve.call(self, res);
                 },
                 error: function(err){
-                    reject.call(err)
+                    reject.call(err);
                 }
             })
         })
     }
 
-    /**
-     * [getState: 获取当前状态]
-     * @param {string} issue [当前期号]
-     * @return {[type]}      [description]
-    */
-    getState(issue){
+    getState (issue){
         let self = this;
-        return new Promise((resolve, reject)=> {
+
+        return new Promise((resolve, reject)=>{
             $.ajax({
-                url: 'get/state',
+                url: '/get/state',
+                type: 'get',
                 data: {
                     issue: issue
                 },
                 dataType: 'json',
                 success: function(res){
-                    resolve.call(self, res)
+                    resolve.call(self, res);
                 },
                 error: function(err){
-                    reject.call(err)
+                    reject.call(err);
                 }
             })
         })
     }
 }
-
-export default Interface;
