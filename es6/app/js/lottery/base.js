@@ -1,5 +1,6 @@
 import $ from 'jquery';
-class Base{
+
+export default class Base{
   /**
    * [initPlayList 初始化奖金和玩法及说明]
    * @return {[type]} [description]
@@ -46,20 +47,20 @@ class Base{
    * @return {[type]} [description]
    */
   initNumber(){
-    for(let i=1;i<12;i++){
-      this.number.add((''+i).padStart(2,'0'))
+    for(let i = 0; i < 12; i++){
+      this.number.add( (i+'').padStart(2, '0') );
     }
   }
 
   /**
    * [setOmit 设置遗漏数据]
-   * @param {[type]} omit [description]
+   * @param {[Map]} omit [description]
    */
   setOmit(omit){
-    let self=this;
+    let self = this;
     self.omit.clear();
-    for(let [index,item] of omit.entries()){ //omit是个map结构
-      self.omit.set(index,item)
+    for(let [key, val] of omit.entries()){
+      self.omit.set(key, val);
     }
     $(self.omit_el).each(function(index,item){
       $(item).text(self.omit.get(index))
@@ -68,14 +69,15 @@ class Base{
 
   /**
    * [setOpenCode 设置开奖]
-   * @param {[type]} code [description]
+   * @param {[Set]} code [description]
    */
   setOpenCode(code){
-    let self=this;
-    self.open_code.clear(); 
-    for(let item of code.values()){ // code是个map结构
-      self.open_code.add(item);
+    let self = this;
+    this.open_code.clear();
+    for(let val of code.values()){
+      this.open_code.add(val);
     }
+
     self.updateOpenCode&&self.updateOpenCode.call(self,code);
   }
 
@@ -243,18 +245,19 @@ class Base{
 
   /**
    * [getRandom 生成随机数]
-   * @param  {[type]} num [description]
-   * @return {[type]}     [description]
+   * @param  {[Set]} num [ 不重复的额彩票号码 ]
+   * @return {[string]}     [description]
    */
    getRandom(num){
-      let arr=[],index;
-      let number=Array.from(this.number);  //1~11号码数组
+      let arr, index;
+      let number = Array.from(this.number);
       while(num--){
-        index=Number.parseInt(Math.random()*number.length);  // 索引
-          arr.push(number[index]);
-          number.splice(index,1);
+        index = Number.parseInt( Math.random() * number.length );
+        arr.push(number[index]);
+        number.splice(index, 1);
       }
-      return arr.join(' ');
+
+      return arr.join('');
     }
 
   /**
@@ -277,5 +280,3 @@ class Base{
   }
 
 }
-
-export default Base
