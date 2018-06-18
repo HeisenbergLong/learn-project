@@ -1,11 +1,34 @@
 const path = require('path');
+const htmlWebpackPlugin = require('html-webpack-plugin');  //重新生成html，将替换dist目录下的index.html
+const cleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-	entry: './src/index.js',
-	output: {
-		filename: 'main.js',
-		path: path.resolve(__dirname, 'dist')
+	// entry: './src/index.js',
+	entry: {
+		app: './src/index.js',
+		print: './src/print.js'
 	},
+	//启动服务
+	devServer: {
+		contentBase: './dist'
+	},
+	//生成source-map
+	devtool: 'inline-source-map',
+	//插件
+	plugins: [
+		new cleanWebpackPlugin('dist'),
+		new htmlWebpackPlugin({
+			title: 'Output Management'
+		})
+	],
+	//输出
+	output: {
+		// filename: 'main.js',
+		filename: '[name].bundle.js',
+		path: path.resolve(__dirname, 'dist'),
+		publicPath: '/'
+	},
+	//使用的模块
 	module: {
 		rules: [
 			{

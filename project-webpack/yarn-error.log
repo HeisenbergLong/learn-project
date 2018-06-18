@@ -1,8 +1,8 @@
 Arguments: 
-  C:\Develop\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add --dev csv-loader ml-loader
+  C:\Develop\nodejs\node.exe E:\Program Files (x86)\Yarn\bin\yarn.js add --dev html-webpack-plugin
 
 PATH: 
-  C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Develop\nvm;C:\Develop;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Git\cmd;C:\Program Files\TortoiseGit\bin;C:\Program Files\Sublime Text 3;;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\system32\config\systemprofile\.dnx\bin;C:\Program Files\Microsoft DNX\Dnvm\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\Yarn\bin\;C:\WINDOWS\System32\OpenSSH\;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;C:\Develop\nvm;C:\Develop\nodejs;;C:\Users\admin\AppData\Local\Programs\Fiddler;C:\Users\admin\AppData\Local\Yarn\bin;C:\Users\admin\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft VS Code\bin
+  C:\Users\David\bin;E:\Program Files\Git\mingw64\bin;E:\Program Files\Git\usr\local\bin;E:\Program Files\Git\usr\bin;E:\Program Files\Git\usr\bin;E:\Program Files\Git\mingw64\bin;E:\Program Files\Git\usr\bin;C:\Users\David\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\Develop;C:\Develop\nodejs;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files\Microsoft SQL Server\120\Tools\Binn;C:\Program Files\Microsoft SQL Server\130\Tools\Binn;E:\Program Files\Git\cmd;E:\Program Files (x86)\Sublime Text 3;E:\Program Files (x86)\Yarn\bin;E:\MongoDB\bin;C:\WINDOWS\System32\OpenSSH;C:\Program Files\TortoiseGit\bin;C:\Users\David\AppData\Local\Microsoft\WindowsApps;C:\Develop;C:\Develop\nodejs;E:\Program Files\Microsoft VS Code\bin;C:\Users\David\AppData\Local\Yarn\bin;C:\Users\David\AppData\Local\GitHubDesktop\bin;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;E:\Program Files\Git\usr\bin\vendor_perl;E:\Program Files\Git\usr\bin\core_perl
 
 Yarn version: 
   1.5.1
@@ -3229,14 +3229,5 @@ Lockfile:
       yargs-parser "^9.0.2"
 
 Trace: 
-  Error: https://registry.npm.taobao.org/ml-loader: Not found
-      at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:65019:18)
-      at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:132430:22)
-      at Request.emit (events.js:182:13)
-      at Request.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:133413:10)
-      at Request.emit (events.js:182:13)
-      at IncomingMessage.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:133333:12)
-      at Object.onceWrapper (events.js:273:13)
-      at IncomingMessage.emit (events.js:187:15)
-      at endReadableNT (_stream_readable.js:1081:12)
-      at process._tickCallback (internal/process/next_tick.js:63:19)
+  Error: connect ETIMEDOUT 175.6.42.98:443
+      at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1158:14)

@@ -1,20 +1,16 @@
-import _ from 'lodash';
-import './style.css';
-import ico from './ico.png';
-import $ from '../bower_components/jquery/dist/jquery.min.js';
+import _ from "lodash";
+import printMe from "./print.js";
 
 function component() {
-  var element = document.createElement('div');
+  var element = document.createElement("div");
+  var btn = document.createElement("button");
 
-  // Lodash, now imported by this script
-  element.innerHTML = _.join(['Hello', 'webpack'], ' ');
-  element.classList.add('hello');
+  element.innerHTML = _.join(["Hello", "webpack"], " ");
 
-  // Add the image to our existing div.
-  var myIcon = new Image();
-  myIcon.src = ico;
+  btn.innerHTML = "Click me and check the console!";
+  btn.onclick = printMe;
 
-  element.appendChild(myIcon);
+  element.appendChild(btn);
 
   return element;
 }
