@@ -8,8 +8,8 @@
           <router-link :to="{name: 'view2'}" class="btn">to view2</router-link>
           <transition name="fade" mode="out-in" @after-enter="transitionComplete">
             <!-- 对加载的数据进行缓存 -->
-            <keep-alive>  
-              <router-view/>      
+            <keep-alive>
+              <router-view/>
             </keep-alive>
           </transition>
       </div>

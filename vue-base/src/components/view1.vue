@@ -1,20 +1,24 @@
 <template>
-  <div class="redView1">
+  <div class="view1">
+    <router-link to="view1/red" class="btn">to redView1</router-link>
     <h1>{{ msg }}</h1>
+    <router-view/>
   </div>
 </template>
- 
+
 <script>
+import { mapGetters, mapMutations, mapActions } from 'vuex'
+
 export default {
-  name: 'redView1',
+  name: 'view1',
   data () {
     return {
-      msg: 'This is redView1.vue file'
+      msg: 'This is view1.vue file'
     }
   },
   methods: {
     init(){
-      // this.getParam();
+      this.getParam();
     },
     getParam(){
       console.log( this.$route.params );
