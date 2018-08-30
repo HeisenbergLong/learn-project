@@ -1,7 +1,7 @@
-import * as types from './mutation-types'
+// import * as types from './mutation-types'
 
-export default {
-  [types.SET_USER_NAME] (state, shopping) {
-    state.shopping = shopping
-  }
-}
+// export default {
+//   [types.SET_USER_NAME] (state, shopping) {
+//     state.shopping = shopping
+//   }
+// }

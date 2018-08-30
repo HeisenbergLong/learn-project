@@ -5,7 +5,11 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-Vue.config.productionTip = false;
+/* 全局引入：清除默认样式 */
+import('./styles/reset.css')
+
+/** 引入 mockjs ， production环境可以去掉 */
+require('./mock/mock.js')
 
 /* eslint-disable no-new */
 new Vue({
