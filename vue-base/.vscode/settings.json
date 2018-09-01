@@ -1,0 +1,39 @@
+{
+  "prettier.printWidth": 160,
+  "prettier.tabWidth": 2,
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.disableLanguages": [],
+  "[vue]": {
+    "editor.formatOnSave": true
+  },
+  "[stylus]": {
+    "editor.formatOnSave": true,
+  },
+
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+      {
+          "language": "javascript",
+          "autoFix": true
+      },
+      {
+          "language": "javascriptreact",
+          "autoFix": true
+      },
+      {
+          "language": "html",
+          "autoFix": true
+      },
+      {
+          "language": "vue",
+          "autoFix": true
+      }
+  ],
+
+  "stylusSupremacy.insertColons": false,
+  "stylusSupremacy.insertSemicolons": false,
+  "stylusSupremacy.insertBraces": false,
+
+  "languageStylus.useSeparator": false,
+}

@@ -1,0 +1,25 @@
+{
+  "prettier.printWidth": 160,
+  "prettier.tabWidth": 2,
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.disableLanguages": [],
+  "vetur.format.defaultFormatter.js": "vscode-typescript",
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
+  "editor.tabSize": 2,
+  "[vue]": {
+      "editor.formatOnSave": true,
+  },
+  "[typescript]": {
+      "editor.formatOnSave": true,
+  },
+  "[stylus]": {
+      "editor.formatOnSave": true,
+  },
+
+  "stylusSupremacy.insertColons": false,
+  "stylusSupremacy.insertSemicolons": false,
+  "stylusSupremacy.insertBraces": false,
+
+  "languageStylus.useSeparator": false,
+}
